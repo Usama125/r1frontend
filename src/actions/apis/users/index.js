@@ -1,9 +1,10 @@
+import { trackPromise } from "react-promise-tracker";
 import axios from "../../../axios";
 
-const user = {
+const usersApi = {
   async login(email, password) {
     try {
-      const response = await axios.post("/users/login", { email, password });
+      const response = await trackPromise(axios.post("/users/login", { email, password }));
       return response;
     } catch (error) {
       return error;
@@ -11,7 +12,15 @@ const user = {
   },
   async getAllUsers() {
     try {
-      const response = await axios.get("/users/get/all");
+      const response = await trackPromise(axios.get("/users/get/all"));
+      return response;
+    } catch (error) {
+      return error;
+    }
+  },
+  async deleteUser(id) {
+    try {
+      const response = await trackPromise(axios.delete(`/users/delete/${id}`));
       return response;
     } catch (error) {
       return error;
@@ -19,4 +28,4 @@ const user = {
   }
 };
 
-export default user;
+export default usersApi;

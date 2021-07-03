@@ -3,8 +3,11 @@ import axios from 'axios';
 const token = window.localStorage.getItem('auth');
 
 const instance = axios.create({
-  baseURL: "https://secret-cove-54253.herokuapp.com/api"
+  baseURL: "http://localhost:1337/api"
 });
+
+// http://localhost:1337/api
+// https://secret-cove-54253.herokuapp.com/api
 
 instance.interceptors.response.use(function (response) {
   // Do something with response data

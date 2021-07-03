@@ -13,6 +13,8 @@ import Button from "components/CustomButtons/Button.js";
 import categoriesApi from "actions/apis/categories";
 import { useHistory } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
     cardCategoryWhite: {
@@ -50,6 +52,7 @@ function Category() {
 
   const [categoriesValues, setCategoriesValues] = useState([]);
   const [categoriesHeaders, setCategoriesHeaders] = useState([]);
+  const { promiseInProgress } = usePromiseTracker();
 
   const history = useHistory();
 
@@ -103,11 +106,17 @@ function Category() {
                     </span>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                      tableHeaderColor="primary"
-                      tableHead={categoriesHeaders}
-                      tableData={categoriesValues}
-                    />
+                  { promiseInProgress ? 
+                        <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                          <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                        </div>
+                      : 
+                      <Table
+                        tableHeaderColor="primary"
+                        tableHead={categoriesHeaders}
+                        tableData={categoriesValues}
+                      />
+                  }
                 </CardBody>
                 </Card>
             </GridItem>

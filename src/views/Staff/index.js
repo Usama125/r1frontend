@@ -13,6 +13,8 @@ import Button from "components/CustomButtons/Button.js";
 import staffApi from "actions/apis/staff";
 import { useHistory } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
     cardCategoryWhite: {
@@ -50,6 +52,7 @@ function Staff() {
 
   const [staffValues, setstaffValues] = useState([]);
   const [staffHeaders, setstaffHeaders] = useState([]);
+  const { promiseInProgress } = usePromiseTracker();
 
   const history = useHistory();
 
@@ -103,11 +106,17 @@ function Staff() {
                     </span>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                      tableHeaderColor="primary"
-                      tableHead={staffHeaders}
-                      tableData={staffValues}
-                    />
+                  { promiseInProgress ? 
+                          <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                            <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                          </div>
+                        : 
+                      <Table
+                        tableHeaderColor="primary"
+                        tableHead={staffHeaders}
+                        tableData={staffValues}
+                      />
+                  }
                 </CardBody>
                 </Card>
             </GridItem>

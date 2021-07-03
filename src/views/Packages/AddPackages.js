@@ -13,6 +13,8 @@ import categoriesApi from "actions/apis/categories";
 import { toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router-dom';
 import packagesApi from "actions/apis/packages";
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
   cardCategoryWhite: {
@@ -47,6 +49,7 @@ const validationSchema = yup.object({
 });
 
 export default function AddPackage() {
+  const { promiseInProgress } = usePromiseTracker();
   const history = useHistory();
   const { id } = useParams();
   const [imageUrl, setImageUrl] = useState("");
@@ -138,6 +141,11 @@ export default function AddPackage() {
               <p className={classes.cardCategoryWhite}>Packages</p>
             </CardHeader>
             <CardBody>
+            { promiseInProgress ? 
+                      <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                        <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                      </div>
+                    : 
                   <form onSubmit={formik.handleSubmit}>
                     <Grid container spacing={3}>
                         <Grid item xs={4}>
@@ -260,6 +268,7 @@ export default function AddPackage() {
                       Back
                   </Button>
                   </form>
+            }
             </CardBody>
           </Card>
         </Grid>

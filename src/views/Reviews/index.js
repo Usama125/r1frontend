@@ -11,6 +11,10 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
 import reviews from '../../actions/apis/reviews/index';
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
+
+
 const styles = {
     cardCategoryWhite: {
       "&,& a,& a:hover,& a:focus": {
@@ -47,6 +51,7 @@ function Reviews() {
 
   const [reviewsValues, setReviewsValues] = useState([]);
   const [reviewsHeaders, setReviewsHeaders] = useState([]);
+  const { promiseInProgress } = usePromiseTracker();
 
   useEffect(() => {
     fetchData();
@@ -56,7 +61,7 @@ function Reviews() {
     const result = await reviews.getAllReviews();
     const data = result?.data?.data;
     if(data?.length > 0){
-      setReviewsHeaders(Object.keys(data[0]).filter(item => (item !== "_id" && item !== "__v" && item !== "createdAt" && item !== "updatedAt")));
+      setReviewsHeaders(["Name", "Date", "Rating", "Comment", "Package", "User"]);
       const totalData = [];
       if(data.length > 0){
         data.forEach(item => {
@@ -87,11 +92,17 @@ function Reviews() {
                     <Button type="button" color="info" style={{float: 'right'}}>Add Review</Button>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                    tableHeaderColor="primary"
-                    tableHead={reviewsHeaders}
-                    tableData={reviewsValues}
-                    />
+                  { promiseInProgress ? 
+                        <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                          <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                        </div>
+                      : 
+                      <Table
+                        tableHeaderColor="primary"
+                        tableHead={reviewsHeaders}
+                        tableData={reviewsValues}
+                      />
+                  }
                 </CardBody>
                 </Card>
             </GridItem>

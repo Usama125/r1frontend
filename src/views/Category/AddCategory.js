@@ -15,6 +15,8 @@ import { useFormik } from 'formik';
 import categoriesApi from "actions/apis/categories";
 import { toast } from 'react-toastify';
 import { useHistory, useParams } from 'react-router-dom';
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
   cardCategoryWhite: {
@@ -44,6 +46,7 @@ const validationSchema = yup.object({
 });
 
 export default function AddCategory() {
+  const { promiseInProgress } = usePromiseTracker();
   const history = useHistory();
   const { id } = useParams();
   useEffect(() => {
@@ -89,6 +92,11 @@ export default function AddCategory() {
               <p className={classes.cardCategoryWhite}>Package Categories</p>
             </CardHeader>
             <CardBody>
+            { promiseInProgress ? 
+                      <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                        <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                      </div>
+                    : 
               <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                   <form onSubmit={formik.handleSubmit}>
@@ -111,6 +119,7 @@ export default function AddCategory() {
                   </form>
                 </GridItem>
               </GridContainer>
+            }
             </CardBody>
           </Card>
         </GridItem>

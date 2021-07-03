@@ -10,7 +10,10 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import Button from "components/CustomButtons/Button.js";
-import user from "actions/apis/users";
+import usersApi from "actions/apis/users";
+import { toast } from "react-toastify";
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
     cardCategoryWhite: {
@@ -48,26 +51,34 @@ function Users() {
 
   const [usersValues, setUsersValues] = useState([]);
   const [usersHeaders, setUsersHeaders] = useState([]);
+  const { promiseInProgress } = usePromiseTracker();
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  const deleteUserHandler = (id) => {
+    usersApi.deleteUser(id).then(res => {
+      toast.success("User deleted successfully");
+      fetchData();
+    }).catch(err => {
+      toast.error("Problem delete the user");
+    })
+  }
+
   const fetchData = async () => {
-    const result = await user.getAllUsers();
+    const result = await usersApi.getAllUsers();
     const data = result?.data?.data;
     if(data?.length > 0){
-      setUsersHeaders(Object.keys(data[0]).filter(item => (item !== "_id" && item !== "__v" && item !== "categoryId" && item !== "imageUrl" && item !== "createdAt" && item !== "updatedAt")));
+      setUsersHeaders(["Email", "First Name", "Last Name", "Delete"]);
       const totalData = [];
       if(data.length > 0){
         data.forEach(item => {
-          delete item._id;
           delete item.__v;
-          delete item.categoryId;
-          delete item.imageUrl;
           delete item.createdAt;
           delete item.updatedAt;
-
+          delete item.address;
+          item.delete= <Button type="button" color="danger" onClick={deleteUserHandler.bind(this, item._id)}>Delete</Button>
           totalData.push(Object.values(item));
         })
         setUsersValues(totalData);
@@ -77,26 +88,31 @@ function Users() {
 
     const classes = useStyles();
     return (
-        <GridContainer>
-            <GridItem xs={12} sm={12} md={12}>
-                <Card>
-                <CardHeader color="primary">
-                    <h4 className={classes.cardTitleWhite}>Users</h4>
-                    <p className={classes.cardCategoryWhite}>
-                        Users List
-                    </p>
-                    <Button type="button" color="info" style={{float: 'right'}}>Add User</Button>
-                </CardHeader>
-                <CardBody>
+      <GridContainer>
+          <GridItem xs={12} sm={12} md={12}>
+              <Card>
+              <CardHeader color="primary">
+                  <h4 className={classes.cardTitleWhite}>Packages</h4>
+                  <p className={classes.cardCategoryWhite}>
+                      Users
+                  </p>
+              </CardHeader>
+              <CardBody>
+                { promiseInProgress ? 
+                            <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                              <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                            </div>
+                          : 
                     <Table
-                    tableHeaderColor="primary"
-                      tableHead={[]}
-                      tableData={[]}
+                      tableHeaderColor="primary"
+                      tableHead={usersHeaders}
+                      tableData={usersValues}
                     />
-                </CardBody>
-                </Card>
-            </GridItem>
-        </GridContainer>
+                }
+              </CardBody>
+              </Card>
+          </GridItem>
+      </GridContainer>
     )
 }
 

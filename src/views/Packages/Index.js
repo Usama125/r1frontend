@@ -13,6 +13,8 @@ import Button from "components/CustomButtons/Button.js";
 import packagesApi from '../../actions/apis/packages';
 import { useHistory } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 const styles = {
     cardCategoryWhite: {
@@ -51,6 +53,7 @@ function Packages() {
     const history = useHistory();
     const [packagesValues, setPackagesValues] = useState([]);
     const [packagesHeaders, setPackagesHeaders] = useState([]);
+    const { promiseInProgress } = usePromiseTracker();
 
     useEffect(() => {
       fetchData();
@@ -88,6 +91,7 @@ function Packages() {
     }
 
     const classes = useStyles();
+
     return (
         <GridContainer>
             <GridItem xs={12} sm={12} md={12}>
@@ -100,11 +104,17 @@ function Packages() {
                     <Button type="button" color="info" style={{float: 'right'}} onClick={() => { history.push('/admin/addPackage') }}>Add Package</Button>
                 </CardHeader>
                 <CardBody>
-                    <Table
-                      tableHeaderColor="primary"
-                      tableHead={packagesHeaders}
-                      tableData={packagesValues}
-                    />
+                    { promiseInProgress ? 
+                      <div style={{ textAlign: "center", height: "100px", marginTop: '60px' }}>
+                        <HashLoader color={"#9b33b2"} loading={true} size={50} />
+                      </div>
+                    : 
+                      <Table
+                        tableHeaderColor="primary"
+                        tableHead={packagesHeaders}
+                        tableData={packagesValues}
+                      />
+                    }
                 </CardBody>
                 </Card>
             </GridItem>

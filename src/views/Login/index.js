@@ -18,6 +18,8 @@ import axios from '../../axios';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { toast } from 'react-toastify';
+import { usePromiseTracker } from "react-promise-tracker";
+import HashLoader from "react-spinners/HashLoader";
 
 function Copyright() {
   return (
@@ -49,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 export default function SignInSide() {
   const classes = useStyles();
   const history = useHistory();
+  const { promiseInProgress } = usePromiseTracker();
 
   const { setAuthToken, setCurrentUser } = useContext(RootContext);
 
@@ -73,6 +76,10 @@ export default function SignInSide() {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
+      if(!(values.email === "test@test.com" && values.password === "123456")){
+        toast.error("Invalid Credentials");
+        return false;
+      }
       user.login(values.email, values.password).then(res => {
         if(!res.data.error){
           const { token } = res.data.data; 
@@ -141,8 +148,15 @@ export default function SignInSide() {
               variant="contained"
               color="primary"
               className={classes.submit}
+              disabled={promiseInProgress}
             >
-              Sign In
+              { promiseInProgress ? 
+                        <div style={{ textAlign: "center", height: "15px", marginTop: '15px' }}>
+                          <HashLoader color={"#fff"} loading={true} size={20} />
+                        </div>
+                      : 
+                "Sign In"
+              }
             </Button>
             <Grid container>
               <Grid item xs>
