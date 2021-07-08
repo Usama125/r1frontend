@@ -3,7 +3,7 @@ import axios from 'axios';
 const token = window.localStorage.getItem('auth');
 
 const instance = axios.create({
-  baseURL: "http://localhost:1337/api"
+  baseURL: "https://secret-cove-54253.herokuapp.com/api"
 });
 
 // http://localhost:1337/api
