@@ -28,7 +28,7 @@ export default function Sidebar(props) {
   const { color, logo, image, logoText, routes } = props;
   var links = (
     <List className={classes.list}>
-      {routes.filter(item => (item.name !== "Add Staff" && item.name !== "Edit Staff" && item.name !== "Add Package" && item.name !== "Edit Package" && item.name !== "Add Category" && item.name !== "Edit Category")).map((prop, key) => {
+      {routes.filter(item => (item.name !== "Booking Details" && item.name !== "Add Staff" && item.name !== "Edit Staff" && item.name !== "Add Package" && item.name !== "Edit Package" && item.name !== "Add Category" && item.name !== "Edit Category")).map((prop, key) => {
         var activePro = " ";
         var listItemClasses;
         if (prop.path === "/upgrade-to-pro") {

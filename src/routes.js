@@ -45,6 +45,7 @@ import { Settings } from "@material-ui/icons";
 import AddCategory from "views/Category/AddCategory";
 import AddPackage from "views/Packages/AddPackages";
 import AddStaff from "views/Staff/AddStaff";
+import BookingDetails from "views/Bookings/BookingDetails";
 
 const dashboardRoutes = [
   {
@@ -143,6 +144,14 @@ const dashboardRoutes = [
     component: Bookings,
     layout: "/admin"
   },
+  {
+    path: "/viewDetails/:id",
+    name: "Booking Details",
+    rtlName: "لوحة القيادة",
+    icon: Dashboard,
+    component: BookingDetails,
+    layout: "/admin"
+  }
   // {
   //   path: "/settings",
   //   name: "Settings",
